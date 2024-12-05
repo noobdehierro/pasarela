@@ -15,7 +15,7 @@
         class="max-w-2xl w-full bg-white shadow-2xl rounded-2xl p-10 border border-gray-300 relative">
         <!-- Logo -->
         <div class="flex justify-center mb-8">
-            <img src="https://mexico.pochteca.net/wp-content/uploads/2020/09/logo-pochteca.webp"
+            <img src="{{ asset('images/gd-mexico.png') }}"
                 alt="Logo de la Empresa" class="w-48">
         </div>
 
@@ -73,7 +73,7 @@
     <div id="thank-you-message"
         class="hidden flex flex-col items-center justify-center bg-white shadow-2xl rounded-2xl p-10 border border-gray-300">
         <div class="flex justify-center mb-6">
-            <img src="https://mexico.pochteca.net/wp-content/uploads/2020/09/logo-pochteca.webp"
+            <img src="{{ asset('images/gd-mexico.png') }}"
                 alt="Logo de la Empresa" class="w-32">
         </div>
         <h2 class="text-5xl font-extrabold text-gray-800 mb-4 text-center">¡Gracias por su compra!</h2>

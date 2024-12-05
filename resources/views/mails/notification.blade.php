@@ -10,7 +10,7 @@
         <!-- Cabecera -->
         <tr>
             <td align="center" bgcolor="#4CAF50" style="padding: 20px 0;">
-                <img src="https://mexico.pochteca.net/wp-content/uploads/2020/09/logo-pochteca.webp" alt="Logo" width="150" style="display: block;" />
+                <img src="{{ asset('images/gd-mexico.png') }}" alt="Logo" width="150" style="display: block;" />
             </td>
         </tr>
         <!-- Título -->
@@ -45,15 +45,15 @@
                 <p style="color: #555555; font-size: 16px; line-height: 1.5;">
                     Si tienes alguna pregunta, no dudes en responder a este correo. ¡Estamos aquí para ayudarte!
                 </p>
-                <p style="color: #555555; font-size: 16px;">Saludos,<br>El equipo de [Nombre de la Empresa]</p>
+                <p style="color: #555555; font-size: 16px;">Saludos,<br>El equipo de GD Mexico</p>
             </td>
         </tr>
         <!-- Pie de página -->
         <tr>
             <td align="center" bgcolor="#f4f4f4" style="padding: 10px; color: #777777; font-size: 12px;">
-                © 2023 [Nombre de la Empresa]. Todos los derechos reservados.<br>
+                {{-- © 2023 [Nombre de la Empresa]. Todos los derechos reservados.<br>
                 <a href="#" style="color: #777777; text-decoration: none;">Política de privacidad</a> | 
-                <a href="#" style="color: #777777; text-decoration: none;">Cancelar suscripción</a>
+                <a href="#" style="color: #777777; text-decoration: none;">Cancelar suscripción</a> --}}
             </td>
         </tr>
     </table>

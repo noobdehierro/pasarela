@@ -48,7 +48,7 @@ class PaymentController extends Controller
 
         Mail::to($correo)->send(new PaymentLink($details));
 
-        return back()->with('success', '¡Gracias por su compra!');
+        return back()->with('success', 'El enlace de pago ha sido enviado correctamente.');
     }
 
     public function payment()
