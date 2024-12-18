@@ -53,7 +53,19 @@
                             </button>
                         </div>
                     </form>
-
+                    <!-- Sección para mostrar los datos ingresados -->
+                    @if (session('form_data'))
+                        <div id="form-output" class="mt-6 p-4 border border-gray-300 rounded-lg bg-gray-50"
+                            style="word-break: break-all">
+                            <h3 class="text-lg font-semibold text-gray-800">Datos Ingresados:</h3>
+                            <ul id="form-data-list" class="mt-2 space-y-2 text-sm text-gray-700">
+                                @foreach (session('form_data') as $key => $value)
+                                    <li><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
+                                        {{ $value }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

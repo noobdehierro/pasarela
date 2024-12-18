@@ -10,7 +10,6 @@ class PaymentController extends Controller
 {
     public function sendPaymentLink(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             "nombre" => "required",
             "apellidos" => "required",
@@ -21,34 +20,19 @@ class PaymentController extends Controller
             "marca" => "required",
         ]);
 
-        $nombre = $request->input('nombre');
-        $apellidos = $request->input('apellidos');
-        $monto = $request->input('monto');
-        $descripcion = $request->input('descripcion');
-        $numero_cotizacion = $request->input('numero_cotizacion');
-        $correo = $request->input('correo');
-        $marca = $request->input('marca');
+        $data = $request->only(['nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca']);
 
         $url = env('APP_URL');
-
-        $tail = 'nombre=' . $nombre . '&apellidos=' . $apellidos . '&monto=' . $monto . '&descripcion=' . $descripcion . '&numero_cotizacion=' . $numero_cotizacion . '&correo=' . $correo . '&marca=' . $marca;
+        $tail = http_build_query($data); // Convierte los datos en una query string
         $encTail = base64_encode($tail); // Codificar el tail en Base64
         $finalUrl = $url . '/payment' . '?' . $encTail;
 
-        $details = [
-            'nombre' => $nombre,
-            'apellidos' => $apellidos,
-            'monto' => $monto,
-            'descripcion' => $descripcion,
-            'numero_cotizacion' => $numero_cotizacion,
-            'correo' => $correo,
-            'marca' => $marca,
-            'url' => $finalUrl
-        ];
+        $details = array_merge($data, ['url' => $finalUrl]);
 
-        Mail::to($correo)->send(new PaymentLink($details));
+        Mail::to($data['correo'])->send(new PaymentLink($details));
 
-        return back()->with('success', 'El enlace de pago ha sido enviado correctamente.');
+        return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
+            ->with('form_data', $details); // Añade los datos a la sesión
     }
 
     public function payment()
