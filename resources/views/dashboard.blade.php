@@ -48,10 +48,11 @@
 
                         <div class="flex items-center justify-between">
                             <button type="submit"
-                                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline transition duration-200">
+                                class="w-full bg-[#96002e] hover:bg-[#96002e] text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline transition duration-200">
                                 Enviar
                             </button>
                         </div>
+
                     </form>
                     <!-- Sección para mostrar los datos ingresados -->
                     @if (session('form_data'))
