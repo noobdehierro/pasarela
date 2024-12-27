@@ -27,12 +27,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/payment', [PaymentController::class, 'payment'])->name('payment.payment');
 
-// Route::post('/payment-webhook', [PaymentController::class, 'paymentWebhook'])->name('payment.payment_webhook');
-Route::post('/payment-webhook',function(){
-    return 'hola';
-});
+// Route::post('/update-status', [PaymentController::class, 'updateStatus'])->name('payment.update_status');
 
-Route::post('/greeting', function () {
-    return 'Hello World';
-});
 require __DIR__ . '/auth.php';

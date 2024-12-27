@@ -21,40 +21,40 @@ class PaymentController extends Controller
             "correo" => "required",
             "marca" => "required",
         ]);
+        $userId = auth()->user()->id;
+
+        $order = Payment::create([
+            'user_id' => $userId,
+            'name' => $request->input('nombre'),
+            'last_name' => $request->input('apellidos'),
+            'amount' => $request->input('monto'),
+            'description' => $request->input('descripcion'),
+            'quotation_number' => $request->input('numero_cotizacion'),
+            'email' => $request->input('correo'),
+            'brand' => $request->input('marca'),
+            'url' => '',
+            'status' => 'pending'
+        ]);
+
+        $orderId = $order->id;
 
         $data = $request->only(['nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca']);
+
+        $data['order_id'] = $orderId;
 
         $url = env('APP_URL');
         $tail = http_build_query($data); // Convierte los datos en una query string
         $encTail = base64_encode($tail); // Codificar el tail en Base64
         $finalUrl = $url . '/payment' . '?' . $encTail;
 
+        $order->update(['url' => $finalUrl]);
+
         $details = array_merge($data, ['url' => $finalUrl]);
 
         Mail::to($data['correo'])->send(new PaymentLink($details));
 
-        $userId = auth()->user()->id;
-
-        try {
-            Payment::create([
-                'user_id' => $userId,
-                'name' => $data['nombre'],
-                'last_name' => $data['apellidos'],
-                'amount' => $data['monto'],
-                'description' => $data['descripcion'],
-                'quotation_number' => $data['numero_cotizacion'],
-                'email' => $data['correo'],
-                'brand' => $data['marca'],
-                'url' => $finalUrl,
-                'status' => 'pending'
-            ]);
-            return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
-                ->with('form_data', $details); // Añade los datos a la sesión
-        } catch (\Throwable $th) {
-            dd($th);
-            return back()->with('error', 'Ocurrio un error al enviar el enlace de pago.')
-                ->with('form_data', $details); // Añade los datos a la sesión
-        }
+        return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
+        ->with('form_data', $details); // Añade los datos a la sesión
     }
 
     public function payment()
@@ -66,8 +66,9 @@ class PaymentController extends Controller
         $numero_cotizacion = $this->getQueryVariable("numero_cotizacion");
         $correo = $this->getQueryVariable("correo");
         $marca = $this->getQueryVariable("marca");
+        $order_id = $this->getQueryVariable("order_id");
 
-        if (empty($nombre) || empty($apellidos) || empty($monto) || empty($descripcion) || empty($correo) || empty($marca)) {
+        if (empty($nombre) || empty($apellidos) || empty($monto) || empty($descripcion) || empty($correo) || empty($marca) || empty($order_id)) {
             return redirect('/404');
         }
 
@@ -79,7 +80,7 @@ class PaymentController extends Controller
             $PAYPAL_CLIENT_ID = env('PAYPAL_LIVE_CLIENT_ID');
         }
 
-        return view('payments.payment', compact('nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca', 'PAYPAL_CLIENT_ID'));
+        return view('payments.payment', compact('nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca', 'order_id', 'PAYPAL_CLIENT_ID'));
     }
 
     function getQueryVariable($variable)
@@ -109,8 +110,20 @@ class PaymentController extends Controller
         return view('payments.show', compact('payment'));
     }
 
-    public function paymentWebhook()
+    public function paymentWebhook(Request $request)
     {
-        return 'hola';
+
+        $order_id = $request->input('order_id');
+        $status = $request->input('status');
+
+        Payment::where('id', $order_id)->update(['status' => $status]);
+
+        return response()->json(['status' => 'success', 'data' => $request->all()]);
+
+    }
+
+    public function updateStatus(Request $request)
+    {
+        return $request->all();
     }
 }

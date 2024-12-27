@@ -15,8 +15,7 @@
         class="max-w-2xl w-full bg-white shadow-2xl rounded-2xl p-10 border border-gray-300 relative">
         <!-- Logo -->
         <div class="flex justify-center mb-8">
-            <img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}"
-                alt="Logo de la Empresa" class="w-1/2">
+            <img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}" alt="Logo de la Empresa" class="w-1/2">
         </div>
 
         <!-- Título de la Cotización -->
@@ -73,8 +72,7 @@
     <div id="thank-you-message"
         class="hidden flex flex-col items-center justify-center bg-white shadow-2xl rounded-2xl p-10 border border-gray-300">
         <div class="flex justify-center mb-6">
-            <img src="{{ asset('images/gd-mexico.png') }}"
-                alt="Logo de la Empresa" class="w-32">
+            <img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}" alt="Logo de la Empresa" class="w-full">
         </div>
         <h2 class="text-5xl font-extrabold text-gray-800 mb-4 text-center">¡Gracias por su compra!</h2>
         <p class="text-lg text-gray-600 text-center mb-6">Su transacción ha sido exitosa.<br>Recibirá un correo de
@@ -108,12 +106,26 @@
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    // Ocultar la cotización y mostrar el mensaje de agradecimiento
-                    document.getElementById('cotizacion-container').style.display = 'none';
-                    document.getElementById('thank-you-message').classList.remove('hidden');
+                    fetch('{{ route('payment.payment_webhook') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            order_id: {{ $order_id }},
+                            status: details.status,
+                        })
+                    }).then(response => response.json()).then(data => {
+                        console.log(data);
+                        document.getElementById('cotizacion-container').style.display = 'none';
+                        document.getElementById('thank-you-message').classList.remove('hidden');
+                    }).catch(error => {
+                        console.error(error);
+                    })
                 });
             },
             onError: function(err) {
+                console.log(err);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
