@@ -1,1 +1,1 @@
-<img src="{{ asset('images/gd-mexico.png') }}" alt="Logo de la Empresa" {{$attributes}}>
+<img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}" alt="Logo de la Empresa" {{$attributes}}>

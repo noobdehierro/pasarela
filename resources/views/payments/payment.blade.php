@@ -15,8 +15,8 @@
         class="max-w-2xl w-full bg-white shadow-2xl rounded-2xl p-10 border border-gray-300 relative">
         <!-- Logo -->
         <div class="flex justify-center mb-8">
-            <img src="{{ asset('images/gd-mexico.png') }}"
-                alt="Logo de la Empresa" class="w-48">
+            <img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}"
+                alt="Logo de la Empresa" class="w-1/2">
         </div>
 
         <!-- Título de la Cotización -->
@@ -24,37 +24,37 @@
 
         <!-- Información de la Cotización -->
         <div class="space-y-6">
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Nombre:</label>
                 <p class="text-gray-600 text-lg">{{ $nombre }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Apellidos:</label>
                 <p class="text-gray-600 text-lg">{{ $apellidos }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Monto:</label>
                 <p class="text-gray-600 text-lg">${{ number_format($monto, 2) }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Descripción:</label>
                 <p class="text-gray-600 text-lg">{{ $descripcion }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Número de Cotización:</label>
                 <p class="text-gray-600 text-lg">#{{ $numero_cotizacion }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Correo:</label>
                 <p class="text-gray-600 text-lg">{{ $correo }}</p>
             </div>
 
-            <div class="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <div class="border p-4 rounded-lg shadow-sm bg-gray-50 break-words">
                 <label class="block text-gray-700 font-semibold text-lg">Marca:</label>
                 <p class="text-gray-600 text-lg">{{ $marca }}</p>
             </div>

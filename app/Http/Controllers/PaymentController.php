@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PaymentLink;
+use App\Models\Payment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,7 +17,7 @@ class PaymentController extends Controller
             "apellidos" => "required",
             "monto" => "required",
             "descripcion" => "required",
-            "numero_cotizacion" => "required",
+            "numero_cotizacion" => "nullable",
             "correo" => "required",
             "marca" => "required",
         ]);
@@ -31,8 +33,28 @@ class PaymentController extends Controller
 
         Mail::to($data['correo'])->send(new PaymentLink($details));
 
-        return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
-            ->with('form_data', $details); // Añade los datos a la sesión
+        $userId = auth()->user()->id;
+
+        try {
+            Payment::create([
+                'user_id' => $userId,
+                'name' => $data['nombre'],
+                'last_name' => $data['apellidos'],
+                'amount' => $data['monto'],
+                'description' => $data['descripcion'],
+                'quotation_number' => $data['numero_cotizacion'],
+                'email' => $data['correo'],
+                'brand' => $data['marca'],
+                'url' => $finalUrl,
+                'status' => 'pending'
+            ]);
+            return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
+                ->with('form_data', $details); // Añade los datos a la sesión
+        } catch (\Throwable $th) {
+            dd($th);
+            return back()->with('error', 'Ocurrio un error al enviar el enlace de pago.')
+                ->with('form_data', $details); // Añade los datos a la sesión
+        }
     }
 
     public function payment()
@@ -45,7 +67,7 @@ class PaymentController extends Controller
         $correo = $this->getQueryVariable("correo");
         $marca = $this->getQueryVariable("marca");
 
-        if (empty($nombre) || empty($apellidos) || empty($monto) || empty($descripcion) || empty($numero_cotizacion) || empty($correo) || empty($marca)) {
+        if (empty($nombre) || empty($apellidos) || empty($monto) || empty($descripcion) || empty($correo) || empty($marca)) {
             return redirect('/404');
         }
 
@@ -57,7 +79,7 @@ class PaymentController extends Controller
             $PAYPAL_CLIENT_ID = env('PAYPAL_LIVE_CLIENT_ID');
         }
 
-        return view('payment', compact('nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca', 'PAYPAL_CLIENT_ID'));
+        return view('payments.payment', compact('nombre', 'apellidos', 'monto', 'descripcion', 'numero_cotizacion', 'correo', 'marca', 'PAYPAL_CLIENT_ID'));
     }
 
     function getQueryVariable($variable)
@@ -74,5 +96,21 @@ class PaymentController extends Controller
             }
         }
         return false;
+    }
+
+    public function payments()
+    {
+        $payments = Payment::where('user_id', auth()->id())->paginate(10);
+        return view('payments.index', compact('payments'));
+    }
+
+    public function show(Payment $payment)
+    {
+        return view('payments.show', compact('payment'));
+    }
+
+    public function paymentWebhook()
+    {
+        return 'hola';
     }
 }

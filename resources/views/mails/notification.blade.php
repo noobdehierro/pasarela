@@ -13,7 +13,7 @@
         <!-- Cabecera -->
         <tr>
             <td align="center" style="padding: 20px 0;">
-                <img src="{{ asset('images/gd-mexico.png') }}" alt="Logo" width="150" style="display: block;" />
+                <img src="{{ asset('images/logo_casa_lomas_dorado.svg') }}" alt="Logo" width="150" style="display: block;" />
             </td>
         </tr>
         <!-- Título -->
@@ -40,7 +40,7 @@
         <tr>
             <td align="center" style="padding: 20px;">
                 <a href="{{ $url }}"
-                    style="text-decoration: none; background-color: #96002e; color: #ffffff; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
+                    style="text-decoration: none; background-color: #373737; color: #ffffff; padding: 10px 20px; border-radius: 5px; font-size: 16px;">
                     Ir a Pagar
                 </a>
             </td>

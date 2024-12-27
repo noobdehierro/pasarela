@@ -18,8 +18,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/send-payment-link', [PaymentController::class, 'sendPaymentLink'])->name('payment.send_payment_link');
+
+    Route::get('/payments', [PaymentController::class, 'payments'])->name('payment.payments');
+
+    Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payment.show');
+    
 });
 
 Route::get('/payment', [PaymentController::class, 'payment'])->name('payment.payment');
 
+// Route::post('/payment-webhook', [PaymentController::class, 'paymentWebhook'])->name('payment.payment_webhook');
+Route::post('/payment-webhook',function(){
+    return 'hola';
+});
+
+Route::post('/greeting', function () {
+    return 'Hello World';
+});
 require __DIR__ . '/auth.php';
