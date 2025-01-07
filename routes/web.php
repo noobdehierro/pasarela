@@ -22,7 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments', [PaymentController::class, 'payments'])->name('payment.payments');
 
     Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payment.show');
-    
+
+    Route::get('/generator', function () {
+        return view('generator');
+    })->name('generator');
 });
 
 Route::get('/payment', [PaymentController::class, 'payment'])->name('payment.payment');
