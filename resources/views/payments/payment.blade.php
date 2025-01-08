@@ -80,7 +80,7 @@
     </div>
 
     <script
-        src="https://www.paypal.com/sdk/js?client-id={{ $PAYPAL_CLIENT_ID }}&components=buttons&currency=MXN&buyer-country=MX">
+        src="https://www.paypal.com/sdk/js?client-id={{ $PAYPAL_CLIENT_ID }}&components=buttons&currency=MXN">
     </script>
 
     <script>
