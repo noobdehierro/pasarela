@@ -1,87 +1,109 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
 
     @if (session('success'))
         <div id="success-alert"
-            class="flex items-center p-2 mb-4 text-sm text-green-700 bg-green-100 rounded-lg border border-green-300"
+            class="flex items-center p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg border border-green-300"
             role="alert">
-            <span class="font-medium">¡Éxito!</span> {{ session('success') }}
+            <span class="font-semibold">¡Éxito!</span>
+            <p class="ml-2">{{ session('success') }}</p>
         </div>
     @endif
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 flex justify-around">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <!-- Table Section -->
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Nombre</th>
+                                <th scope="col" class="px-6 py-3">Monto</th>
+                                <th scope="col" class="px-6 py-3">Descripción</th>
+                                <th scope="col" class="px-6 py-3">Fecha</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($payments as $payment)
+                                <tr class="bg-white border-b">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        {{ $payment->name . ' ' . $payment->last_name }}
+                                    </td>
+                                    <td class="px-6 py-4">${{ $payment->amount }} MXN</td>
+                                    <td class="px-6 py-4">{{ $payment->description }}</td>
+                                    <td class="px-6 py-4">{{ $payment->created_at }}</td>
+                                    <td class="px-6 py-4">{{ $payment->status }}</td>
+                                    <td class="px-6 py-4">
+                                        <a href="{{ route('payment.show', $payment->id) }}" class="text-indigo-600 hover:text-indigo-900">Ver</a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        No se encontraron pagos registrados.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-
-                    <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-                        <div class="flex justify-between border-gray-200 border-b dark:border-gray-700 pb-3">
-                            <dl>
-                                <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Links
-                                    Totales</dt>
-                                <dd class="leading-none text-3xl font-bold text-gray-900 dark:text-white"
-                                    id="total"></dd>
-                            </dl>
-                            <div>
-                                <span
-                                    class="bg-green-100 text-green-800 text-xs font-medium inline-flex items-center px-2.5 py-1 rounded-md dark:bg-green-900 dark:text-green-300">
-                                    <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
-                                    </svg>
-                                    <p id="tazaBendeficios"></p>
-                                </span>
-                            </div>
+            <!-- Cards Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="flex items-center justify-between pb-3 border-b">
+                        <dl>
+                            <dt class="text-base text-gray-500">Links Totales</dt>
+                            <dd class="text-3xl font-bold text-gray-900" id="total">0</dd>
+                        </dl>
+                        <div class="flex items-center space-x-1 bg-green-100 text-green-800 px-2 py-1 rounded-md">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
+                            </svg>
+                            <p id="tazaBendeficios">0%</p>
                         </div>
-                        <div class="grid grid-cols-2 py-3">
-                            <dl>
-                                <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Links
-                                    completados</dt>
-                                <dd class="leading-none text-xl font-bold text-green-500 dark:text-green-400"
-                                    id="completados">
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Links pendientes
-                                </dt>
-                                <dd class="leading-none text-xl font-bold text-red-600 dark:text-red-500"
-                                    id="pendientes"></dd>
-                            </dl>
-                        </div>
-                        <div id="bar-chart"></div>
                     </div>
-
-
-                    <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-                        <div class="flex justify-between">
-                            <div>
-                                <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2"
-                                    id="completadosarea">
-                                </h5>
-                                <p class="text-base font-normal text-gray-500 dark:text-gray-400">links completados</p>
-                            </div>
-                            <div
-                                class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500 dark:text-green-500 text-center">
-                                <p id="tazaBendeficiosarea"></p>
-                                <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 10 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div id="area-chart"></div>
+                    <div class="grid grid-cols-2 gap-4 py-4">
+                        <dl>
+                            <dt class="text-base text-gray-500">Links completados</dt>
+                            <dd class="text-xl font-bold text-green-500" id="completados">0</dd>
+                        </dl>
+                        <dl>
+                            <dt class="text-base text-gray-500">Links pendientes</dt>
+                            <dd class="text-xl font-bold text-red-600" id="pendientes">0</dd>
+                        </dl>
                     </div>
+                    <div id="bar-chart"></div>
+                </div>
 
-
-
+                <!-- Card 2 -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h5 class="text-3xl font-bold text-gray-900" id="completadosarea">0</h5>
+                            <p class="text-base text-gray-500">Links completados</p>
+                        </div>
+                        <div class="flex items-center text-green-500 space-x-1">
+                            <p id="tazaBendeficiosarea">0%</p>
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div id="area-chart"></div>
                 </div>
             </div>
         </div>
@@ -127,12 +149,12 @@
 
                 var options = {
                     series: [{
-                            name: "Income",
+                            name: "Completados",
                             color: "#31C48D",
                             data: data.data.total_por_mes.completados,
                         },
                         {
-                            name: "Expense",
+                            name: "Pendientes",
                             data: data.data.total_por_mes.pendientes,
                             color: "#F05252",
                         }

@@ -13,35 +13,35 @@
 
                     <!-- Contenedor para la tabla responsiva -->
                     <div class="overflow-x-auto">
-                        <table class="w-full table-auto border-collapse border border-gray-300 rounded-lg">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
-                                    <th class="py-3 px-4 text-left">Nombre</th>
-                                    <th class="py-3 px-4 text-left">Apellidos</th>
-                                    <th class="py-3 px-4 text-left">Monto</th>
-                                    <th class="py-3 px-4 text-left">Descripción</th>
-                                    <th class="py-3 px-4 text-left">Fecha</th>
-                                    <th class="py-3 px-4 text-left">Status</th>
-                                    <th class="py-3 px-4 text-left">Acciones</th>
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nombre</th>
+                                    <th scope="col" class="px-6 py-3">Monto</th>
+                                    <th scope="col" class="px-6 py-3">Descripción</th>
+                                    <th scope="col" class="px-6 py-3">Fecha</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-700 text-sm">
+                            <tbody>
                                 @forelse ($payments as $payment)
-                                    <tr class="border-b border-gray-300 hover:bg-gray-50">
-                                        <td class="py-2 px-4">{{ $payment->name }}</td>
-                                        <td class="py-2 px-4">{{ $payment->last_name }}</td>
-                                        <td class="py-2 px-4">${{ number_format($payment->amount, 2) }}</td>
-                                        <td class="py-2 px-4 truncate">{{ Str::limit($payment->description, 20) }}</td>
-                                        <td class="py-2 px-4">{{ $payment->created_at }}</td>
-                                        <td class="py-2 px-4">{{ $payment->status }}</td>
-                                        <td class="py-2 px-4">
+                                    <tr class="bg-white border-b">
+                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                            {{ $payment->name . ' ' . $payment->last_name }}
+                                        </td>
+                                        <td class="px-6 py-4">${{ $payment->amount }} MXN</td>
+                                        <td class="px-6 py-4">{{ $payment->description }}</td>
+                                        <td class="px-6 py-4">{{ $payment->created_at }}</td>
+                                        <td class="px-6 py-4">{{ $payment->status }}</td>
+                                        <td class="px-6 py-4">
                                             <a href="{{ route('payment.show', $payment->id) }}"
-                                                class="bg-blue-500 text-white py-1 px-2 rounded">Ver</a>
+                                                class="text-indigo-600 hover:text-indigo-900">Ver</a>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="py-3 px-4 text-center text-gray-500">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
                                             No se encontraron pagos registrados.
                                         </td>
                                     </tr>
