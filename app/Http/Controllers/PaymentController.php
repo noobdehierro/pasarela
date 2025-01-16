@@ -104,7 +104,11 @@ class PaymentController extends Controller
 
     public function payments()
     {
-        $payments = Payment::where('user_id', auth()->id())->orderBy('id', 'desc')->paginate(10);
+        if (auth()->user()->hasRole('Supervisor')) {
+            $payments = Payment::orderBy('id', 'desc')->paginate(10);
+        } else {
+            $payments = Payment::where('user_id', auth()->id())->orderBy('id', 'desc')->paginate(10);
+        }
         return view('payments.index', compact('payments'));
     }
 
