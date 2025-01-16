@@ -18,7 +18,9 @@ class Payment extends Model
         'email',
         'brand',
         'url',
-        'status'
+        'status',
+        'user_name',
+        'id_sucursal'
     ];
 
     public function user()

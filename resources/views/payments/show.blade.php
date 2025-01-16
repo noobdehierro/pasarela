@@ -59,7 +59,8 @@
                         <div>
                             <strong class="text-gray-600">URL:</strong>
                             @if (filter_var($payment->url, FILTER_VALIDATE_URL))
-                                <a href="{{ $payment->url }}" target="_blank" class="text-blue-500 hover:underline">Ver enlace</a>
+                                <a href="{{ $payment->url }}" target="_blank" class="text-blue-500 hover:underline">Ver
+                                    enlace</a>
                             @else
                                 <p class="text-gray-800">N/A</p>
                             @endif
@@ -76,11 +77,29 @@
                             <strong class="text-gray-600">Status:</strong>
                             <p class="text-gray-800">{{ $payment->status }}</p>
                         </div>
+
+                        <!-- user_id -->
+                        <div>
+                            <strong class="text-gray-600">Id de Usuario:</strong>
+                            <p class="text-gray-800">{{ $payment->user_id }}</p>
+                        </div>
+
+                        <!-- user_name -->
+                        <div>
+                            <strong class="text-gray-600">Nombre de Usuario:</strong>
+                            <p class="text-gray-800">{{ $payment->user_name }}</p>
+                        </div>
+
+                        <!-- id_sucursal -->
+                        <div>
+                            <strong class="text-gray-600">Id de Sucursal:</strong>
+                            <p class="text-gray-800">{{ $payment->id_sucursal }}</p>
+                        </div>
                     </div>
 
                     <!-- Botón Volver -->
                     <div class="mt-8">
-                        <a href="{{ route('payment.payments') }}" 
+                        <a href="{{ route('payment.payments') }}"
                             class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-lg">
                             Volver a la lista de pagos
                         </a>

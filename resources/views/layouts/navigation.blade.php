@@ -47,6 +47,11 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        @if (@Auth::user()->hasRole('supervisor'))
+                            <x-dropdown-link :href="route('user.index')">
+                                {{ __('Usuarios') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

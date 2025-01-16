@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentCompleted;
 use App\Mail\PaymentLink;
 use App\Models\Payment;
-use Illuminate\Http\JsonResponse;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -21,10 +22,10 @@ class PaymentController extends Controller
             "correo" => "required",
             "marca" => "required",
         ]);
-        $userId = auth()->user()->id;
+        $user = User::find(auth()->user()->id);
 
         $order = Payment::create([
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'name' => $request->input('nombre'),
             'last_name' => $request->input('apellidos'),
             'amount' => $request->input('monto'),
@@ -33,7 +34,9 @@ class PaymentController extends Controller
             'email' => $request->input('correo'),
             'brand' => $request->input('marca'),
             'url' => '',
-            'status' => 'pending'
+            'status' => 'pending',
+            'user_name' => $user->name,
+            'id_sucursal' => $user->id_sucursal
         ]);
 
         $orderId = $order->id;
@@ -54,7 +57,7 @@ class PaymentController extends Controller
         Mail::to($data['correo'])->send(new PaymentLink($details));
 
         return back()->with('success', 'El enlace de pago ha sido enviado correctamente.')
-        ->with('form_data', $details); // Añade los datos a la sesión
+            ->with('form_data', $details); // Añade los datos a la sesión
     }
 
     public function payment()
@@ -101,7 +104,7 @@ class PaymentController extends Controller
 
     public function payments()
     {
-        $payments = Payment::where('user_id', auth()->id())->paginate(10);
+        $payments = Payment::where('user_id', auth()->id())->orderBy('id', 'desc')->paginate(10);
         return view('payments.index', compact('payments'));
     }
 
@@ -116,10 +119,16 @@ class PaymentController extends Controller
         $order_id = $request->input('order_id');
         $status = $request->input('status');
 
-        Payment::where('id', $order_id)->update(['status' => $status]);
+        $data = Payment::where('id', $order_id)->update(['status' => $status]);
 
-        return response()->json(['status' => 'success', 'data' => $request->all()]);
+        $payment = Payment::find($order_id);
 
+        try {
+            Mail::to($payment['email'])->send(new PaymentCompleted($payment));
+            return response()->json(['status' => 'success', 'data' => $request->all(), 'payment' => $payment]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'error' => $th->getMessage(), 'payment' => $payment]);
+        }
     }
 
     public function updateStatus(Request $request)

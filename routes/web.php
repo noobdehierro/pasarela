@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
 
@@ -10,7 +12,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $payments = Payment::orderBy('id', 'desc')->take(5)->get();
+    if (auth()->user()->hasRole('supervisor')) {
+        $payments = Payment::orderBy('id', 'desc')->take(5)->get();
+    } else {
+        $payments = Payment::orderBy('id', 'desc')->take(5)->where('user_id', auth()->user()->id)->get();
+    }
     return view('dashboard', compact('payments'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -28,6 +34,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/generator', function () {
         return view('generator');
     })->name('generator');
+
+    Route::middleware(RoleMiddleware::class . ':supervisor')->group(function () {
+
+        Route::get('/users', [UserController::class, 'index'])->name('user.index');
+
+        Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
+
+        Route::get('/userEdit/{user}', [UserController::class, 'edit'])->name('user.edit');
+
+        Route::put('/userEdit/{user}', [UserController::class, 'update'])->name('user.update');
+
+        Route::get('/userCreate', [UserController::class, 'create'])->name('user.create');
+
+        Route::post('/userRegister', [UserController::class, 'store'])->name('user.store');
+    });
 });
 
 Route::get('/payment', [PaymentController::class, 'payment'])->name('payment.payment');

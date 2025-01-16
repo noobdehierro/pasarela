@@ -43,7 +43,8 @@
                                     <td class="px-6 py-4">{{ $payment->created_at }}</td>
                                     <td class="px-6 py-4">{{ $payment->status }}</td>
                                     <td class="px-6 py-4">
-                                        <a href="{{ route('payment.show', $payment->id) }}" class="text-indigo-600 hover:text-indigo-900">Ver</a>
+                                        <a href="{{ route('payment.show', $payment->id) }}"
+                                            class="text-indigo-600 hover:text-indigo-900">Ver</a>
                                     </td>
                                 </tr>
                             @empty
@@ -126,6 +127,7 @@
                 },
                 body: JSON.stringify({
                     user_id: {{ auth()->user()->id }},
+                    role: '{{ auth()->user()->roles->first()->name }}',
                     months: getLastSixMonths()
                 })
             }).then(response => response.json()).then(data => {

@@ -37,16 +37,26 @@ Route::post('/prueba', function (Request $request) {
     $startDate = Carbon::create($startYear, date('n', strtotime($startMonth)), 1)->startOfDay();
     $endDate = Carbon::create($endYear, date('n', strtotime($endMonth)), 1)->endOfMonth()->endOfDay();
 
-    // Consultas para obtener los pagos completados y pendientes
-    $completados = Payment::where('user_id', 1)
-        ->where('status', 'COMPLETED')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->get();
+    if ($request->input('role') === 'vendedor') {
+        // Consultas para obtener los pagos completados y pendientes
+        $completados = Payment::where('user_id', $request->input('user_id'))
+            ->where('status', 'COMPLETED')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
 
-    $pendientes = Payment::where('user_id', 1)
-        ->where('status', 'PENDING')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->get();
+        $pendientes = Payment::where('user_id', $request->input('user_id'))
+            ->where('status', 'PENDING')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+    } else {
+        $completados = Payment::where('status', 'COMPLETED')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $pendientes = Payment::where('status', 'PENDING')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+    }
 
     // Contar total de pagos completados y pendientes
     $completadosCount = $completados->count();
@@ -105,7 +115,8 @@ Route::post('/prueba', function (Request $request) {
             'startDate' => $startDate,
             'endMonth' => $endMonth,
             'endYear' => $endYear,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'Request' => $request
         ]
     ]);
 })->name('prueba');
