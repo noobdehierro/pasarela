@@ -21,6 +21,12 @@
                     <x-nav-link :href="route('payment.payments')" :active="request()->routeIs('payment.payments')">
                         {{ __('Payments') }}
                     </x-nav-link>
+                    @if (@Auth::user()->hasRole('Supervisor'))
+                        <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endif
+
                 </div>
             </div>
 
@@ -47,11 +53,6 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        @if (@Auth::user()->hasRole('supervisor'))
-                            <x-dropdown-link :href="route('user.index')">
-                                {{ __('Usuarios') }}
-                            </x-dropdown-link>
-                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -96,6 +97,14 @@
                 {{ __('Payments') }}
             </x-responsive-nav-link>
         </div>
+
+        @if (@Auth::user()->hasRole('Supervisor'))
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

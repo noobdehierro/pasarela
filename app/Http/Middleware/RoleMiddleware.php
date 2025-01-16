@@ -15,7 +15,7 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (auth()->user()->roles->first()->name !== "supervisor") {
+        if (auth()->user()->roles->first()->name !== "Supervisor") {
             return redirect(route('dashboard', absolute: false));
         }
 

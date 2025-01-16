@@ -12,7 +12,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    if (auth()->user()->hasRole('supervisor')) {
+    if (auth()->user()->hasRole('Supervisor')) {
         $payments = Payment::orderBy('id', 'desc')->take(5)->get();
     } else {
         $payments = Payment::orderBy('id', 'desc')->take(5)->where('user_id', auth()->user()->id)->get();
@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
         return view('generator');
     })->name('generator');
 
-    Route::middleware(RoleMiddleware::class . ':supervisor')->group(function () {
+    Route::middleware(RoleMiddleware::class . ':Supervisor')->group(function () {
 
         Route::get('/users', [UserController::class, 'index'])->name('user.index');
 

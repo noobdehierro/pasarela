@@ -37,7 +37,7 @@ Route::post('/prueba', function (Request $request) {
     $startDate = Carbon::create($startYear, date('n', strtotime($startMonth)), 1)->startOfDay();
     $endDate = Carbon::create($endYear, date('n', strtotime($endMonth)), 1)->endOfMonth()->endOfDay();
 
-    if ($request->input('role') === 'vendedor') {
+    if ($request->input('role') === 'Vendedor') {
         // Consultas para obtener los pagos completados y pendientes
         $completados = Payment::where('user_id', $request->input('user_id'))
             ->where('status', 'COMPLETED')
